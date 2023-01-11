@@ -1,8 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
+
 namespace PragmaGoTech\Interview;
+require_once __DIR__ . './Model/LoanProposal.php';
 
 use PragmaGoTech\Interview\Model\LoanProposal;
 
@@ -34,9 +35,26 @@ class FeeCalculator
     public function calculateFee(LoanProposal $loanRequest): float
     {
         $loanAmount = $loanRequest->amount();
+        $fee = 0;
         if ($loanAmount < 1000 || $loanAmount > 20000) {
             throw new \InvalidArgumentException('Loan amount must be in range of 1.000 PLN - 20.000 PLN!');
         }
-        return 0.1;
+
+        foreach ($this->feeRates as $threshold => $rate) {
+            if ($loanAmount < $threshold) {
+                break;
+            }
+            $fee = $rate;
+
+        }
+        var_dump($fee);
+
+        return $fee;
     }
 }
+
+$calculator = new FeeCalculator();
+
+$application = new LoanProposal(4000);
+$fee = $calculator->calculateFee($application);
+
