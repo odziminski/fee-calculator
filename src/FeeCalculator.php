@@ -55,9 +55,13 @@ class FeeCalculator
             }
         }
 
+        $fee = $lowRate + ($highRate - $lowRate) * ($loanAmount - $lowThreshold) / ($highThreshold - $lowThreshold);
+        $remainder = ($fee + $loanAmount) % 5;
+        if ($remainder != 0) {
+            $fee += 5 - $remainder;
+        }
 
-
-        return 0.1;
+        return $fee;
     }
 
 }
@@ -66,4 +70,5 @@ $calculator = new FeeCalculator();
 
 $application = new LoanProposal(2750);
 $fee = $calculator->calculateFee($application);
+var_dump($fee);
 
